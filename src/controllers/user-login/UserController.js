@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 console.log(process.env.TOKEN_ACCESS);
 
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const { use } = require("../../routers/Client");
 const UserController = {
   // thêm 1 user
