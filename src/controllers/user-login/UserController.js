@@ -1,7 +1,6 @@
 const User = require("../../models/User");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
-console.log(process.env.TOKEN_ACCESS);
 
 const bcrypt = require("bcryptjs");
 const { use } = require("../../routers/Client");
