@@ -1,4 +1,5 @@
 const express = require("express");
+const router = express.Router();
 const app = express();
 const cors = require("cors");
 const PORT = 5000;
@@ -19,6 +20,8 @@ app.use(cors());
 // kết nối db
 connectDB();
 // router
+app.use("/home", (req, res) => res.send("hê lô"));
+
 app.use("/user", userRouter);
 app.use("/role", roleRouter);
 app.use("/staff", loginRouter);
