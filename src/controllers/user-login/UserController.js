@@ -76,15 +76,21 @@ const UserController = {
       const { passNew } = req.body.dataChangerPass;
       const hashedPassword = await bcrypt.hash(passNew, 10);
 
-      const updatedUser = await User.findByIdAndUpdate(
-        id,
-        { Password: hashedPassword },
-        { new: true }
-      );
+      const updatedUser = await User.findOne({ Staff: id });
       if (!updatedUser) {
         return res.json({ message: "Không có tài khoản của user này" });
       }
+      updatedUser.Password = hashedPassword;
       res.status(200).json(updatedUser);
+    } catch (error) {
+      res.status(403).json(error);
+    }
+  },
+  getAUserById: async (req, res) => {
+    try {
+      const id = req.params.id;
+      const user = await User.findOne({ Staff: id });
+      res.status(200).json(user);
     } catch (error) {
       res.status(403).json(error);
     }

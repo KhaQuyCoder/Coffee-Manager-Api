@@ -4,6 +4,7 @@ router.post("/", UserController.addAUser);
 router.post("/changerPass/:id", UserController.ChangerPass);
 router.post("/login", UserController.checkUser);
 router.get("/", UserController.getAllUser);
+router.get("/:id", UserController.getAUserById);
 router.delete("/:id", UserController.delAUserByIdFromStaff);
 
 module.exports = router;
