@@ -70,6 +70,25 @@ const UserController = {
       res.status(403).json(error);
     }
   },
+  ChangerPass: async (req, res) => {
+    try {
+      const id = req.params.id;
+      const { passNew } = req.body.dataChangerPass;
+      const hashedPassword = await bcrypt.hash(passNew, 10);
+
+      const updatedUser = await User.findByIdAndUpdate(
+        id,
+        { Password: hashedPassword },
+        { new: true }
+      );
+      if (!updatedUser) {
+        return res.json({ message: "Không có tài khoản của user này" });
+      }
+      res.status(200).json(updatedUser);
+    } catch (error) {
+      res.status(403).json(error);
+    }
+  },
 };
 
 module.exports = UserController;
