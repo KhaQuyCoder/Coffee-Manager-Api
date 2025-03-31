@@ -1,5 +1,6 @@
 const User = require("../../models/User");
 const jwt = require("jsonwebtoken");
+const mongoose = require("mongoose");
 require("dotenv").config();
 
 const bcrypt = require("bcryptjs");
@@ -70,22 +71,7 @@ const UserController = {
       res.status(403).json(error);
     }
   },
-  ChangerPass: async (req, res) => {
-    try {
-      const id = req.params.id;
-      const { passNew } = req.body.dataChangerPass;
-      const hashedPassword = await bcrypt.hash(passNew, 10);
 
-      const updatedUser = await User.findOne({ Staff: id });
-      if (!updatedUser) {
-        return res.json({ message: "Không có tài khoản của user này" });
-      }
-      updatedUser.Password = hashedPassword;
-      res.status(200).json(updatedUser);
-    } catch (error) {
-      res.status(403).json(error);
-    }
-  },
   getAUserById: async (req, res) => {
     try {
       const id = req.params.id;
@@ -93,6 +79,30 @@ const UserController = {
       res.status(200).json(user);
     } catch (error) {
       res.status(403).json(error);
+    }
+  },
+
+  ChangerPass: async (req, res) => {
+    try {
+      const { id, passOld, passNew } = req.body;
+      const user = await User.findById(id);
+      if (!user) {
+        return res.status(404).json({ message: "Không tìm thấy tài khoản" });
+      }
+      const isMatch = await bcrypt.compare(passOld, user.Password);
+      if (!isMatch) {
+        return res.status(400).json({ message: "Mật khẩu cũ không chính xác" });
+      }
+
+      const hashedPassword = await bcrypt.hash(passNew, 10);
+      user.Password = hashedPassword;
+      user.Staff = user.Staff;
+      await user.save();
+
+      return res.status(200).json({ message: "Đổi mật khẩu thành công!" });
+    } catch (error) {
+      console.error("Lỗi server:", error);
+      return res.status(500).json({ message: "Lỗi server", error });
     }
   },
 };
