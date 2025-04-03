@@ -14,6 +14,7 @@ const productRouter = require("../src/routers/Product");
 const workRouter = require("../src/routers/Timekeeping");
 const revenueRouter = require("../src/routers/Revenue");
 const materialRouter = require("../src/routers/Material");
+const historyRouter = require("../src/routers/History");
 
 app.use(express.json());
 app.use(cors());
@@ -34,6 +35,7 @@ app.use("/product", productRouter);
 app.use("/workDay", workRouter);
 app.use("/revenue", revenueRouter);
 app.use("/material", materialRouter);
+app.use("/history", historyRouter);
 
 app.listen(PORT, () => {
   console.log("server is running...");
