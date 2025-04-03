@@ -25,7 +25,7 @@ const RevenueController = {
   },
   addRevenueDay: async (req, res) => {
     try {
-      const { revenueDay, revenueMonth } = req.body;
+      const { revenueDay, revenueMonth, revenueYear } = req.body;
       const { year } = req.params;
       const revenue = await Revenue.findOne({ year: year });
       if (!revenue) return res.json({ message: "Không tìm thấy năm" });
@@ -34,6 +34,9 @@ const RevenueController = {
       );
       const updateRevenueMonth = revenue.revenueMonth.find(
         (r) => r.month == revenueMonth.month
+      );
+      const updateRevenueYear = revenue.revenueYear.find(
+        (r) => r.year == revenueYear.year
       );
       if (updateRevenueDay) {
         updateRevenueDay.revenue += revenueDay.revenue;
@@ -44,6 +47,11 @@ const RevenueController = {
         updateRevenueMonth.revenue += revenueMonth.revenue;
       } else {
         revenue.revenueMonth.push(revenueMonth);
+      }
+      if (updateRevenueYear) {
+        updateRevenueYear.revenue += revenueYear.revenue;
+      } else {
+        revenue.revenueYear.push(revenueYear);
       }
       await revenue.save();
       res.status(200).json(revenue);
