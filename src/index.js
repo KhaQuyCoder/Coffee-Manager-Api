@@ -36,6 +36,21 @@ app.use("/workDay", workRouter);
 app.use("/revenue", revenueRouter);
 app.use("/material", materialRouter);
 app.use("/history", historyRouter);
+const twilio = require("twilio");
+
+const client = new twilio("ACxxxxxxx", "xxxxxxxxx");
+
+app.post("/send-sms", (req, res) => {
+  const { to, message } = req.body;
+  client.messages
+    .create({
+      body: message,
+      to, // Số điện thoại người nhận
+      from: +12025551234, // Số điện thoại Twilio bạn đã đăng ký
+    })
+    .then((msg) => res.status(200).send("Đã gửi thành công!"))
+    .catch((err) => res.status(500).send("Lỗi gửi SMS"));
+});
 
 app.listen(PORT, () => {
   console.log("server is running...");
